@@ -1,0 +1,20 @@
+Hi 
+Use the deduper sheet to dedupe 3 columns of data 
+Try to only enter email addresses - but the app will try to extract emails from cells appropriately if needed
+^This can be used to your advantage -
+You can copy entire segments from the admin portal and paste it into the appropriate column
+You still need to split the data between column 2 and 3 for users with and without a licence, respectively
+ONLY PUT IN NON FORMATED DATA (VALUES ONLY):
+this can be accomplished by a hotkey on most systems "CTRL + SHIFT + V"
+or you can right click -> Paste special -> values only in google sheets
+
+Designators for which column should accept what data:
+
+Column 1 is designated for USER LIST SUBMITTED BY CUSTOMER
+Column 2 is designated for Existing ACTIVE users from any account
+Column 3 is designated for Existing INACTIVE users from any acocunt 
+
+You may choose to use it any other way but the data presented might be wrong 
+Once your data is in place, press the big red Run Deduper button and your data should be presented in a pop up 
+Once you hit the button for the first time the sheet will ask your account for permissions 
+So it can run the script in the background - Follow the onscreen instructions to give it permissions 

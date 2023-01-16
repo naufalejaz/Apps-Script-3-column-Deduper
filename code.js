@@ -9,6 +9,7 @@ function dedupe() {
     var values = SpreadsheetApp.getActiveSheet().getDataRange().getValues()
   
   
+    //regex to find valid entries (emails)
     const validateEmail = (email) => {
       return String(email)
         .trim()
@@ -18,6 +19,7 @@ function dedupe() {
         );
     };
   
+    //removing spaces around emails and dropping all characters to lower case
     function fixEmail(email) {
       return String(email)
         .trim()
@@ -25,11 +27,13 @@ function dedupe() {
   
     }
   
+    //regex to extract emails from spaces which include more text
     function extractEmails(text) {
       return String(text).match(/([a-zA-Z0-9._+-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi);
   
     }
   
+    //duplicate email mapping
     function dupe(a) {
       var seen = {};
       return a.filter(function (item) {
@@ -37,7 +41,7 @@ function dedupe() {
       });
     }
   
-  
+      //unique email mapping
     function uniq(a) {
       var seen = {};
       return a.filter(function (item) {
@@ -46,7 +50,7 @@ function dedupe() {
     }
   
   
-  
+  //nested if statements for iterating through first column (new emails submitted)
     for (n = 0; n < values.length; ++n) {
       var first = values[n][0];
   
@@ -69,7 +73,7 @@ function dedupe() {
     }
   
   
-  
+  //iterating through second column (existing active emails)
     for (n = 0; n < values.length; ++n) {
       var first = values[n][1];
   
@@ -90,6 +94,8 @@ function dedupe() {
   
     }
   
+    
+    //iterating through third column, inactive emails
     for (n = 0; n < values.length; ++n) {
       var first = values[n][2];
   
@@ -111,6 +117,7 @@ function dedupe() {
   
     }
   
+    //spliting duplicates and unique users from first column (new submitted users)
     duplicateUsers = dupe(newUsers);
     newUsers = uniq(newUsers);
   
@@ -121,7 +128,7 @@ function dedupe() {
     var duplicatesInactive = [];
   
   
-  
+  //comparing formatted version of new users to active users
     for (v = 0; v < (newUsers.length); ++v) {
   
       for (b = 0; b < (activeUsers.length); ++b) {
@@ -132,7 +139,7 @@ function dedupe() {
       }
     }
   
-  
+  //comparing formatted version of new users to inactive users
     for (v = 0; v < (newUsers.length); ++v) {
   
       for (b = 0; b < (inactiveUsers.length); ++b) {
@@ -144,24 +151,14 @@ function dedupe() {
     }
   
   
-  
+    //compiling all extracted info into arrays to be printed cleanly 
     var duplicates = duplicatesActive.concat(duplicatesInactive);
   
     var onlyNew = newUsers.filter((item) => !duplicates.includes(item));
     var revokeActive = activeUsers.filter((item) => !newUsers.includes(item));
   
-  
-  
-    /** 
-      Logger.log(duplicatesActive.length + " Existing Active " + duplicatesActive);
-      Logger.log(duplicatesInactive.length+ " Existing inactive " + duplicatesInactive);
-      Logger.log(duplicates.length + " Existing Total " + duplicates);
-      
-      Logger.log(onlyNew.length + " New Users " + onlyNew);
-      Logger.log(revokeActive.length + " Revoke Users " + revokeActive);
-      Logger.log(notEmail);
-    */
-  
+
+    //alert message popup in google sheets to display info
     function alertMessageTitle() {
       SpreadsheetApp.getUi().alert("Results", duplicatesActive.length + " Existing Active " + "\r\n" + duplicatesActive + "\r\n" + "\r\n" +
         duplicatesInactive.length + " Existing inactive " + "\r\n" + duplicatesInactive + "\r\n" + "\r\n" + onlyNew.length + " New Users " + "\r\n" + onlyNew + "\r\n" + "\r\n" + revokeActive.length + " Revoke Users " + "\r\n" + revokeActive + "\r\n" + "\r\n" + duplicateUsers.length + " Duplicate Users Submitted " + "\r\n" + duplicateUsers + "\r\n" + "\r\n" + " Discarded Input Below " + "\r\n" + notEmail, SpreadsheetApp.getUi().ButtonSet.OK);
